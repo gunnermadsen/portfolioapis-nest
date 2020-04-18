@@ -1,7 +1,7 @@
 import { Strategy } from 'passport-jwt'
 import { PassportStrategy } from '@nestjs/passport'
 import { Injectable, InternalServerErrorException, BadRequestException, CanActivate, ExecutionContext } from '@nestjs/common'
-import { AccountService } from '../services/account.service'
+import { AccountService } from '../../modules/account/service/account.service'
 
 @Injectable()
 export class PasswordStrengthGuard implements CanActivate {

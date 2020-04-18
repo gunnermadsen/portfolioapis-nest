@@ -19,7 +19,7 @@ declare const module: any
 
 async function bootstrap() {
 
-  dotenv.config()
+  // dotenv.config()
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
 

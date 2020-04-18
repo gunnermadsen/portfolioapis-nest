@@ -2,15 +2,16 @@ import { Controller, Post, Body, Res, Req, BadRequestException } from '@nestjs/c
 import { Request, Response } from 'express'
 import * as path from 'path'
 import { NotificationsService } from '../../notifications/services/notifications.service'
-import { AccountService } from '../../../shared/services/account.service'
+import { AccountService } from '../../account/service/account.service'
 import { AccountModel } from '../models/account.model'
 import { IAccount } from '../models/account.interface'
+import { AuthenticationService } from '../services/auth.service'
 
 
 @Controller('api')
 export class RegistrationController
 {
-    constructor(private readonly notificationService: NotificationsService, private readonly accountService: AccountService)
+    constructor(private readonly notificationService: NotificationsService, private readonly accountService: AccountService, private readonly authService: AuthenticationService)
     {}
     
     @Post('register')
@@ -20,7 +21,7 @@ export class RegistrationController
 
         if (!username || !email || !password) throw new BadRequestException()
 
-        const account = new AccountModel(username, email, password, this.accountService.generatePasswordHash)
+        const account = new AccountModel(username, email, password, this.authService.generatePasswordHash)
         const result = await this.accountService.createAccount(account)
 
         if (result) 

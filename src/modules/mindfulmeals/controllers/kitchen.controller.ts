@@ -1,51 +1,75 @@
-import { Controller, Get, Post, Body, Res, Request, UseGuards, HttpStatus, NotFoundException, InternalServerErrorException, Delete, Query, BadRequestException, NotAcceptableException, Param, Put } from '@nestjs/common'
-import { Response, response } from 'express'
+import { Controller, Get, Body, Res, UseGuards, NotFoundException, InternalServerErrorException, Delete, Query, Param, Put, Req } from '@nestjs/common'
+import { Response, Request } from 'express'
 import { ObjectLiteral } from 'typeorm';
 import { AuthGuard } from '@nestjs/passport';
-import { MindfulMealsService } from '../services/mindfulmeals.service';
+import { PantryService } from '../services/pantry.service';
+import { CookbookService } from '../services/cookbook.service';
+import { CsrfGuard } from '@/shared/guards/csrf.guard';
 
-@UseGuards(AuthGuard('jwt'))
-@Controller('api/kitchen')
-export class KitchenController {
+@Controller('api')
+export class KitchenController
+{
+    constructor(private readonly pantryService: PantryService, private readonly cookbookService: CookbookService) 
+    { }
 
-    constructor(private readonly mindfulMealsService: MindfulMealsService) { }
-
+    @UseGuards(AuthGuard('jwt'))
     @Get('cookbook')
-    public async fetchAllRecipes(@Query() query: any, @Res() response: Response): Promise<Response | void> {
-
+    public async fetchAllRecipes(@Query() query: any, @Res() response: Response): Promise<Response | void>
+    {
         const { min, max } = query
 
         if (!min || !max) throw new NotFoundException()
 
-        try {
-            const cookbook = await this.mindfulMealsService.fetchAllRecipes()
+        try 
+        {
+            const cookbook = await this.cookbookService.fetchAllRecipes()
 
             return response.status(200).json(cookbook)
-
-        } catch (error) {
+        } 
+        catch (error) 
+        {
             throw new InternalServerErrorException("An error occured", error)
         }
     }
 
-    @Post('new')
-    public async createMeeting(@Body() body: ObjectLiteral, @Res() response: Response): Promise<Response | void> {
+    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(CsrfGuard)
+    @Get('pantry')
+    public async fetchPantryItems(@Req() request: Request, @Res() response: Response, @Param() params: ObjectLiteral): Promise<Response | void>
+    {
+        const user = request.user
 
+        if (!user) throw new NotFoundException()
+
+        try
+        {
+            const pantry = await this.pantryService.fetchPantryItems(user)
+            
+            if (!pantry) throw new NotFoundException()
+            
+            return response.status(200).json(pantry)
+        }
+        catch (error)
+        {
+            throw new InternalServerErrorException(error)
+        }
     }
 
     @Get('verify')
-    public async verifyMeeting(@Query() query: any, @Res() response: Response): Promise<Response | void> {
+    public async verifyMeeting(@Query() query: any, @Res() response: Response): Promise<Response | void> 
+    {
         
     }
 
     @Put('update')
-    public async updateMeeting(@Body() body: any, @Res() response: Response): Promise<void | Response> {
+    public async updateMeeting(@Body() body: any, @Res() response: Response): Promise<Response | void>
+    {
 
-        
     }
 
     @Delete('delete/:meetingId')
-    public async deleteMeeting(@Param() param: any, @Res() response: Response): Promise<void | Response> {
-
+    public async deleteMeeting(@Param() param: any, @Res() response: Response): Promise<Response | void>
+    {
 
     }
 }

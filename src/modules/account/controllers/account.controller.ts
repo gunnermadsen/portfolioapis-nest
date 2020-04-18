@@ -1,7 +1,7 @@
 import { Controller, Get, Res, Req, UseGuards, NotFoundException, InternalServerErrorException, Delete } from '@nestjs/common'
 import { Request, Response } from 'express'
 import { AuthGuard } from '@nestjs/passport';
-import { AccountService } from '@/shared/services/account.service'
+import { AccountService } from '@/modules/account/service/account.service'
 
 @Controller('api/account')
 export class AccountController

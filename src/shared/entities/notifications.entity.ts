@@ -1,5 +1,5 @@
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm'
-import { INotification } from '../modules/notifications/models/notification.model'
+import { INotification } from '../../modules/notifications/models/notification.model'
 
 @Entity({ name: 'notifications' })
 export class Notifications {

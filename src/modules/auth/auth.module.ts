@@ -10,24 +10,27 @@ import { Module } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
 import { PasswordStrengthGuard } from '../../shared/guards/password-strength.guard'
 import { ExistingUserGuard } from '../../shared/guards/existing-user.guard'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { AuthenticationService } from './services/auth.service'
 
 @Module({
     imports: [
-        SharedModule,
         PassportModule, //.register({ defaultStrategy: 'local' }),
         NotificationsModule,
+        SharedModule,
     ],
     providers: [
         JwtStrategy,
         LocalStrategy,
-        {
-            provide: 'PASSWORD_STRENGTH',
-            useClass: PasswordStrengthGuard
-        },
-        {
-            provide: 'EXISTING_USER',
-            useClass: ExistingUserGuard
-        }
+        AuthenticationService,
+        // {
+        //     provide: 'PASSWORD_STRENGTH',
+        //     useClass: PasswordStrengthGuard
+        // },
+        // {
+        //     provide: 'EXISTING_USER',
+        //     useClass: ExistingUserGuard
+        // }
     ],
     controllers: [
         AuthenticationController, 

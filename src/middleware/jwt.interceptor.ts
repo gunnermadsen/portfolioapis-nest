@@ -1,9 +1,10 @@
 import { Request, Response } from 'express';
 import { NextFunction } from "express";
 import { NestMiddleware, Injectable, InternalServerErrorException, NotFoundException, NestInterceptor, ExecutionContext, CallHandler, BadGatewayException } from "@nestjs/common";
-import { AccountService } from '../shared/services/account.service';
+import { AccountService } from '../modules/account/service/account.service';
 import { Observable, EMPTY, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { AuthenticationService } from '@/modules/auth/services/auth.service';
 
 
 export interface HttpResponse<T> {
@@ -12,7 +13,7 @@ export interface HttpResponse<T> {
 
 @Injectable()
 export class JwtInterceptor<T> implements NestInterceptor<HttpResponse<T>> {
-    constructor(private readonly accountService: AccountService) {}
+    constructor(private readonly authService: AuthenticationService) {}
     public async use(request: Request, response: Response, next: NextFunction): Promise<Response | void> {
 
         let token = request.headers.authorization
@@ -24,7 +25,7 @@ export class JwtInterceptor<T> implements NestInterceptor<HttpResponse<T>> {
                 
                 // lets see what verifySessionToken returns, 
                 // when the token expires in 20 seconds
-                const user = await this.accountService.verifySessionToken(token)
+                const user = await this.authService.verifySessionToken(token)
 
                 const now = Date.now()
 
@@ -53,7 +54,7 @@ export class JwtInterceptor<T> implements NestInterceptor<HttpResponse<T>> {
     
                     if (token && token.startsWith('Bearer ')) {
                         token = token.slice(7, token.length).trimLeft()
-                        const user = await this.accountService.verifySessionToken(token)
+                        const user = await this.authService.verifySessionToken(token)
                         return user
                     }
     

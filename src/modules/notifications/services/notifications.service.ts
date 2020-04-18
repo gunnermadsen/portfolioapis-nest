@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getMongoManager, MongoEntityManager } from 'typeorm';
-import { Notifications } from '../../../models/notifications.entity';
+import { Notifications } from '../../../shared/entities/notifications.entity';
 
 @Injectable()
 export class NotificationsService {

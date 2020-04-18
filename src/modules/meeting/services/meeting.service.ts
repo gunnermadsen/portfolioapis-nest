@@ -1,6 +1,6 @@
 import { MongoEntityManager, getMongoManager, ObjectLiteral } from 'typeorm'
 import { Injectable } from '@nestjs/common'
-import { Meeting } from '@/models/meeting.entity'
+import { Meeting } from '@/shared/entities/meeting.entity'
 
 @Injectable()
 export class MeetingService {

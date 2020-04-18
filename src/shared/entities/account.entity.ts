@@ -1,5 +1,5 @@
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm'
-import { IAccount } from '../modules/auth/models/account.interface'
+import { IAccount } from '../../modules/auth/models/account.interface'
 
 @Entity({ name: 'users' })
 export class Account implements IAccount {

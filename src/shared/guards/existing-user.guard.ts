@@ -1,5 +1,5 @@
 import { Injectable, BadRequestException, CanActivate, ExecutionContext } from '@nestjs/common'
-import { AccountService } from '../services/account.service'
+import { AccountService } from '../../modules/account/service/account.service'
 
 @Injectable()
 export class ExistingUserGuard implements CanActivate {

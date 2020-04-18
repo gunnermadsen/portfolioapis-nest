@@ -1,28 +1,28 @@
 import { Injectable, InternalServerErrorException, BadRequestException, ConflictException } from '@nestjs/common'
-import { MongoEntityManager, getMongoManager, InsertResult, ObjectLiteral } from 'typeorm'
+import { MongoEntityManager, getMongoManager, InsertResult, ObjectLiteral, MongoRepository } from 'typeorm'
 
 import { Request } from 'express'
 import { JwtService } from '@nestjs/jwt'
 
-import * as crypto from 'crypto'
-import { IAccount } from '../../modules/auth/models/account.interface'
-import { Account } from '@/models/account.entity'
-import { RequestLog } from '@/models/log.entity'
-import { RequestModel } from '../models/request-log.model'
+import { IAccount } from '../../auth/models/account.interface'
+import { Account } from '@/shared/entities/account.entity'
+import { RequestLog } from '@/shared/entities/log.entity'
+import { RequestModel } from '../../../shared/models/request-log.model'
+import { InjectRepository } from '@nestjs/typeorm'
 
 @Injectable()
 export class AccountService 
 {
-    private readonly manager: MongoEntityManager = getMongoManager()
-
-    constructor(private readonly jwtService: JwtService) 
+    constructor(@InjectRepository(Account) private accountRepository: MongoRepository<Account>) 
     { }
+
+    private readonly manager: MongoEntityManager = getMongoManager()
 
     public async findAccount(query: ObjectLiteral): Promise<Account | undefined>
     {
         try 
         {
-            const account = await this.manager.findOne(Account, query)
+            const account = await this.accountRepository.findOne(query)
             return account
         } 
         catch (error) 
@@ -69,39 +69,6 @@ export class AccountService
     public async deleteAccount(query: ObjectLiteral): Promise<any>
     {
         return await this.manager.findOneAndDelete<Account>(Account, query)
-    }
-
-    public async verifySessionToken(token: string): Promise<any | void>
-    {
-        try 
-        {
-            const payload = await this.jwtService.verify(token)
-            return payload
-        } 
-        catch (error) 
-        {
-            throw new InternalServerErrorException(error)
-        }
-    }
-
-    public generateSessionToken(account: ObjectLiteral): string 
-    {
-        const payload = {
-            sub: account._id,
-            username: account.UserName,
-        }
-
-        return this.jwtService.sign(payload, { algorithm: 'RS512' })
-    }
-
-    public generatePasswordHash(password: string, salt: string): string 
-    {
-        return crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex')
-    }
-
-    public generateRandomBytes(bytes: number): string 
-    {
-        return crypto.randomBytes(bytes).toString('hex')
     }
 
 }

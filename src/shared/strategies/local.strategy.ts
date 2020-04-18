@@ -1,13 +1,14 @@
 import { Strategy } from 'passport-local'
 import { PassportStrategy } from '@nestjs/passport'
 import { Injectable, UnauthorizedException, NotFoundException, InternalServerErrorException } from '@nestjs/common'
-import { AccountService } from '../services/account.service'
+import { AccountService } from '../../modules/account/service/account.service'
 import { IAccount } from '../../modules/auth/models/account.interface'
+import { AuthenticationService } from '@/modules/auth/services/auth.service'
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy)
 {
-    constructor(private readonly accountService: AccountService)
+    constructor(private readonly authService: AuthenticationService, private readonly accountService: AccountService)
     {
         super()
     }
@@ -16,9 +17,9 @@ export class LocalStrategy extends PassportStrategy(Strategy)
     {
         const user = await this.accountService.findAccount({ UserName: username })
 
-        if (!user) throw new NotFoundException()
+        if (!user) throw new NotFoundException("Your username or password is incorrect")
 
-        const hash = this.accountService.generatePasswordHash(password, user.Salt)
+        const hash = this.authService.generatePasswordHash(password, user.Salt)
 
         if (user.Hash === hash)
         {
@@ -26,7 +27,7 @@ export class LocalStrategy extends PassportStrategy(Strategy)
         }
         else
         {
-            throw new NotFoundException()
+            throw new NotFoundException("Your username or password is incorrect")
         }
     }
 }

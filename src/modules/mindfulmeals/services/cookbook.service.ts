@@ -3,20 +3,16 @@ import { Injectable } from '@nestjs/common'
 import { IEdamamRecipe } from '../models/cookbook.model'
 import { Recipe } from '@/shared/entities/recipe.entity'
 import { Pantry } from '@/shared/entities/pantry.entity'
+import { InjectRepository } from '@nestjs/typeorm'
 
 @Injectable()
-export class MindfulMealsService
+export class CookbookService
 {
-    private readonly manager: MongoEntityManager = getMongoManager()
+    constructor(@InjectRepository(Recipe) private recipeRepository: MongoRepository<Recipe>) 
+    {}
 
-    public async fetchAllRecipes(): Promise<IEdamamRecipe[]>
+    public async fetchAllRecipes(): Promise<IEdamamRecipe[]> 
     {
-        return await this.manager.find(Recipe)
+        return await this.recipeRepository.find()
     }
-
-    public async fetchPantryItems(user: any): Promise<any>
-    {
-        return await this.manager.find(Recipe)
-    }
-
 }

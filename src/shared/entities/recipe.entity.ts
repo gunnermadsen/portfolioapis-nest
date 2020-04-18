@@ -1,9 +1,9 @@
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm'
 import { IEdamamRecipe, IDigest, ITotalNutrients } from '@/modules/mindfulmeals/models/cookbook.model';
 
-@Entity({ name: 'recipe' })
-export class Recipe implements IEdamamRecipe {
-
+@Entity({ name: 'recipes' })
+export class Recipe implements IEdamamRecipe
+{
     @ObjectIdColumn()
     public _id: ObjectID
 
