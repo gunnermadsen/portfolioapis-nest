@@ -13,7 +13,7 @@ export class PantryService
 
     public async fetchPantryItems(user: any): Promise<any>
     {
-        return await this.pantryRepository.find()
+        return await this.pantryRepository.find({ UserId: user.sub })
     }
 
 }
