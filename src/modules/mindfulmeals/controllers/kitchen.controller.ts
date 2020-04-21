@@ -22,9 +22,9 @@ export class KitchenController
 
         try 
         {
-            const cookbook = await this.cookbookService.fetchAllRecipes()
+            const cookbook = await this.cookbookService.selectRecipesByRange(parseInt(min), parseInt(max))
 
-            return response.status(200).json(cookbook)
+            return response.status(200).json({ measures: { length: cookbook.length }, cookbook: cookbook })
         } 
         catch (error) 
         {

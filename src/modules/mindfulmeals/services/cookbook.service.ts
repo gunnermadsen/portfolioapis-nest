@@ -11,8 +11,13 @@ export class CookbookService
     constructor(@InjectRepository(Recipe) private recipeRepository: MongoRepository<Recipe>) 
     {}
 
-    public async fetchAllRecipes(): Promise<IEdamamRecipe[]> 
+    public async selectRecipesByRange(min: number, limit: number): Promise<IEdamamRecipe[]> | undefined 
     {
-        return await this.recipeRepository.find()
+        try {
+            const recipes = await this.recipeRepository.find({ skip: min, take: 15 })
+            return recipes
+        } catch (error) {
+            return undefined
+        }
     }
 }
