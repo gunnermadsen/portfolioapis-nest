@@ -8,11 +8,11 @@ import { LogInterceptor } from './middleware/log.interceptor'
 import { MeetingModule } from './modules/meeting/meeting.module'
 import { MindfulMealsModule } from './modules/mindfulmeals/mindfulmeals.module'
 import { NotificationsModule } from './modules/notifications/notifications.module'
-import { ConfigModule } from '@nestjs/config'
+// import { ConfigModule } from '@nestjs/config'
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    // ConfigModule.forRoot(),
     SharedModule,
     AuthModule,
     MeetingModule,
