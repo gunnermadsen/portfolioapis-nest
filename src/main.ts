@@ -23,14 +23,14 @@ async function bootstrap() {
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule)
 
-  const options = new DocumentBuilder()
-    .setTitle('PortfolioAPI-NestJS')
-    .setDescription('API endpoints for my Portfolio')
-    .setVersion('1.0')
-    .addTag('PortfolioAPIs')
-    .build()
+  // const options = new DocumentBuilder()
+  //   .setTitle('PortfolioAPI-NestJS')
+  //   .setDescription('API endpoints for my Portfolio')
+  //   .setVersion('1.0')
+  //   .addTag('PortfolioAPIs')
+  //   .build()
 
-  const document = SwaggerModule.createDocument(app, options)
+  // const document = SwaggerModule.createDocument(app, options)
 
   const corsConfig = {
     origin: [
@@ -68,7 +68,7 @@ async function bootstrap() {
   app.use(morgan('dev'))
   app.use(cookieParser())
 
-  SwaggerModule.setup('api', app, document)
+  // SwaggerModule.setup('api', app, document)
 
   await app.listen(process.env.PORT || 3000)
 
