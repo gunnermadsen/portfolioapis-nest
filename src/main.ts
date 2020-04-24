@@ -11,7 +11,7 @@ import * as multer from 'multer'
 import * as compression from 'compression'
 import * as express from 'express'
 import * as cluster from 'cluster'
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
+// import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
 
 import * as helmet from 'helmet'
 
