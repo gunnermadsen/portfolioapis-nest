@@ -4,10 +4,14 @@
   "description": "",
   "author": "",
   "license": "MIT",
+  "engines": {
+    "node": "12.8.0"
+  },
   "scripts": {
-    "build": "rimraf dist && tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json",
     "format": "prettier --write \"src/**/*.ts\"",
     "postinstall": "npm run prestart:prod",
+    "prestart:prod": "rimraf dist && npm run build",
     "start": "ts-node -r tsconfig-paths/register src/main.ts",
     "start:dev": "tsc-watch -p tsconfig.build.json --onSuccess \"node dist/main.js\"",
     "start:debug": "tsc-watch -p tsconfig.build.json --onSuccess \"node --inspect-brk dist/main.js\"",
@@ -24,7 +28,6 @@
   "dependencies": {
     "@nestjs/cli": "^7.1.2",
     "@nestjs/common": "^7.0.7",
-    "@nestjs/config": "^0.4.0",
     "@nestjs/core": "^7.0.7",
     "@nestjs/jwt": "^7.0.0",
     "@nestjs/mongoose": "^6.4.0",
